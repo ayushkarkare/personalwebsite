@@ -4,7 +4,8 @@ import type React from "react"
 
 import { useState, useEffect, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Moon, Sun, Github, Youtube, Mail, ExternalLink, Download, Phone, MapPin } from "lucide-react"
+import { useTheme } from "next-themes"
+import { Search, Moon, Sun, Github, Youtube, Mail, ExternalLink, Download, Phone, MapPin, Camera, Link2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -13,22 +14,22 @@ import { Card, CardContent } from "@/components/ui/card"
 // Personal data - edit these to customize your site
 const YOU = {
   name: "Ayush Karkare",
-  tagline: "Aerospace student • Builder • Cinematography enjoyer",
-  bio: "I design and build things that fly... In my free time I like taking photos and making videos.",
-  email: "you@example.com",
-  phone: "+1 (555) 123-4567",
-  location: "San Francisco, CA",
+  tagline: "Aerospace Engineer • Tech Enthusiast • Entrepreneur • Photo/Videographer",
+  bio: "Hi, I'm Ayush. I am a student at Purdue University passionate about emerging aerospace technologies and innovative ideas that push boundaries. I especially love exploring how creativity and engineering intersect. You can often find me working on UAV's, experimenting with my 3D printer, or capturing a moment on my camera.",
+  email: "akarkare@purdue.edu",
+  phone: "+1 (484) 319 7085",
+  location: "West Lafayette, IN",
   socials: {
-    github: "https://github.com/yourhandle",
-    youtube: "https://youtube.com/@yourchannel",
-    linkedin: "https://www.linkedin.com/in/yourhandle/",
+    github: "https://github.com/ayushkarkare",
+    youtube: "https://youtube.com/@ayushkarkare3049",
+    linkedin: "https://www.linkedin.com/in/ayushkarkare/",
   },
-  resumeUrl: "/resume.pdf", // Add your resume file to the public folder
+  resumeUrl: "/Karkare_Ayush.pdf",
   skills: ["Python", "React", "TypeScript", "Aero", "CAD"],
   social: [
-    { platform: "GitHub", url: "https://github.com/yourhandle" },
-    { platform: "LinkedIn", url: "https://www.linkedin.com/in/yourhandle/" },
-    { platform: "YouTube", url: "https://youtube.com/@yourchannel" },
+    { platform: "GitHub", url: "https://github.com/ayushkarkare" },
+    { platform: "LinkedIn", url: "https://www.linkedin.com/in/ayushkarkare/" },
+    { platform: "YouTube", url: "https://youtube.com/@ayushkarkare3049" },
   ],
 }
 
@@ -49,36 +50,61 @@ const PROJECTS = [
   {
     title: "BrewTrack",
     year: 2025,
-    description: "AI analytics for cafés.",
-    tags: ["Python", "LLM"],
+    description: "A smart café management tool that tracks sales and inventory in real time, forecasts needs, and provides actionable insights through a conversational AI assistant.",
+    tags: ["Python", "AI/LLM", "Software"],
     link: "#",
     github: "https://github.com/yourhandle/brewtrack",
     demo: "https://brewtrack.com",
   },
   {
-    title: "Flight Club Glider",
+    title: "Durden's Burden Glider",
     year: 2025,
-    description: "Glider for Red Bull Flugtag.",
-    tags: ["Aero", "CAD"],
+    description: "Designed and built a fixed wing Red Bull Flugtag glider inspired by the movie Fight Club, engineered for glide distance in a flight competition.",
+    tags: ["Aero", "CAD", "Hardware"],
     link: "#",
     github: "https://github.com/yourhandle/flightclubglider",
   },
   {
-    title: "Portfolio Website",
+    title: "Electric Bike Conversion Project",
     year: 2024,
-    description: "Personal website with command palette.",
-    tags: ["React", "TypeScript"],
+    description: "An electric bike conversion designed for faster, easier campus commuting with custom 3D-printed parts and a multi-stage belt drive system..",
+    tags: ["CAD", "3D Printing", "Electronics", "Hardware"],
     link: "#",
     github: "https://github.com/yourhandle/yourportfolio",
   },
   {
-    title: "Weather Station",
+    title: "Biovolt",
     year: 2024,
-    description: "IoT weather monitoring system.",
-    tags: ["Arduino", "Python"],
+    description: "A modular biophotovoltaic system that generates electricity from plants and soil microbes, allowing farmers to produce renewable energy without sacrificing crop growth.",
+    tags: ["CAD", "Electronics", "Hardware"],
     link: "#",
     github: "https://github.com/yourhandle/weatherstation",
   },
+  {
+    title: "81Y Spin Up Robot",
+    year: 2024,
+    description: "An award-winning VEX Robotics competition robot with optimized flywheel shooting, precision CAD-designed subsystems, and a documented iterative engineering process.",
+    tags: ["CAD", "Robotics", "Hardware"],
+    link: "#",
+    github: "https://github.com/yourhandle/weatherstation",
+  },
+  {
+    title: "Thermodynamics Property Calculator",
+    year: 2024,
+    description: "Developed a Thermodynamic Properties Calculator in MATLAB and as a React–Flask web app, enabling precise property lookups and interpolation with intuitive, user-friendly interfaces.",
+    tags: ["Python", "MATLAB", "Software"],
+    link: "#",
+    github: "https://github.com/yourhandle/weatherstation",
+  },
+  {
+    title: "Mei Cha/The Lemon Scholars",
+    year: 2024,
+    description: "Built and scaled two beverage ventures to a brick-and-mortar location, generating $50,000+ through strategic marketing and operations.",
+    tags: ["Business/Startup"],
+    link: "#",
+    github: "https://github.com/yourhandle/weatherstation",
+  },
+  
 ]
 
 const EXPERIENCE = [
@@ -86,13 +112,45 @@ const EXPERIENCE = [
     role: "Flight Test Engineering Intern",
     company: "Boeing @ Edwards AFB",
     period: "Summer 2025",
-    bullets: ["Supported avionics testing.", "Automated telemetry report checks."],
+    bullets: ["Collaborated with the B-1B instrumentation team to design avionics components for flight tests and supported the B-52 radar modernization project through system development and integration.", "Analyzed electrical and mechanical drawings, using redlined documents to create Test and Evaluation Work Sheets (TEWS) and document work orders for subassemblies in larger projects.", "Proactively sought learning opportunities by touring various platforms, including the C-17, to understand cross-team procedures and build valuable professional connections."],
+    photos: ["/placeholder.jpg", "/professional-headshot.png"],
+    links: [
+      { title: "Boeing Careers", url: "https://www.boeing.com/careers/" },
+      { title: "Edwards AFB", url: "https://www.edwards.af.mil/" }
+    ]
   },
   {
-    role: "Research Assistant",
-    company: "University Aerospace Lab",
-    period: "2024 - Present",
-    bullets: ["Developed flight control algorithms.", "Published research on autonomous systems."],
+    role: "Competition Airframe Lead",
+    company: "Purdue Aerial Robotics Team",
+    period: "August 2024 - Present",
+    bullets: ["Spearheaded the design and optimization of UAV components using Siemens NX, to ensure aerodynamic efficiency and structural integrity for competition readiness.", "Manufactured and assembled UAV structures using carbon fiber layups for fuselage, wings, and ailerons, maintaining precision within tolerance for proper load distribution.", "Improved manufacturing processes by 3D printing UAV ribs with aerospace-grade filaments instead of carbon fiber layups, reducing complexity and weight while preserving structural integrity."],
+    photos: ["/forest-path.png", "/majestic-mountain-vista.png"],
+    links: [
+      { title: "Team Website", url: "#" },
+      { title: "Competition Results", url: "#" }
+    ]
+  },
+  {
+    role: "Technical Consultant",
+    company: "Scope Consulting",
+    period: "December 2024 - Present",
+    bullets: ["Developed a multi-input neural network for an internal applicant tracking system, achieving 86% accuracy in candidate classification through structured data preprocessing (normalization, encoding) and unstructured text processing (tokenization, TF-IDF), streamlining recruiting cycles.", "Engineered a data integration pipeline combining structured and unstructured data, optimizing model validation with gradient descent and reducing overfitting for a more efficient, scalable system."],
+    photos: ["/sunset-cityscape.png"],
+    links: [
+      { title: "Scope Consulting", url: "#" },
+      { title: "Project Portfolio", url: "#" }
+    ]
+  },
+  {
+    role: "Relations Team Lead",
+    company: "Boilerexams",
+    period: "December 2024 - Present",
+    bullets: ["Lead outreach and partnership efforts to expand Boilerexams, a student-run academic prep platform, across new universities and student organizations.", "Coordinate recruitment, brand strategy, and communication initiatives to grow impact and ensure equitable access to high-quality exam prep resources.", "Drive the expansion of Boilerexams into a chapter-based organization, laying the foundation for future chapters at other universities."],
+    photos: ["/placeholder-bhxyx.png"],
+    links: [
+      { title: "Boilerexams Platform", url: "#" },
+      { title: "University Partnerships", url: "#" }
+    ]
   },
 ]
 
@@ -107,19 +165,67 @@ type SearchItem = {
 
 function GradientFX() {
   return (
-    <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
-      <div
-        className="absolute inset-0 w-full h-full"
+    <div className="fixed inset-0 -z-0 overflow-hidden pointer-events-none">
+      {/* Subtle background gradient similar to ChatGPT */}
+      <div 
+        className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[800px] h-[600px] opacity-30"
         style={{
-          background: "#2563eb", // Ford Bronco blue - deeper baby blue
+          background: "radial-gradient(ellipse at center, #4f46e5 0%, #7c3aed 25%, #ec4899 50%, transparent 70%)",
+          filter: "blur(60px)",
         }}
       />
-    </div>
+      
+      {/* Secondary gradient orb */}
+      <div 
+        className="absolute top-1/3 right-1/8 w-[400px] h-[400px] opacity-50"
+        style={{
+          background: "radial-gradient(circle, #06b6d4 0%, #3b82f6 40%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+      
+              {/* Accent gradient for depth */}
+        <div 
+          className="absolute bottom-1 left-1 w-[300px] h-[300px] opacity-30"
+          style={{
+            background: "radial-gradient(circle, #f59e0b 0%, #ef4444 40%, transparent 70%)",
+            filter: "blur(70px)",
+          }}
+        />
+
+        {/* Cohesive gradient bubbles - Purple/Blue family */}
+        <div className="absolute top-[10%] left-[5%] w-32 h-32 opacity-20 bg-indigo-500 rounded-full blur-3xl" />
+        <div className="absolute top-[20%] right-[8%] w-24 h-24 opacity-15 bg-violet-500 rounded-full blur-2xl" />
+        <div className="absolute top-[40%] left-[3%] w-28 h-28 opacity-18 bg-purple-500 rounded-full blur-3xl" />
+        <div className="absolute top-[60%] right-[5%] w-20 h-20 opacity-12 bg-blue-500 rounded-full blur-2xl" />
+        <div className="absolute bottom-[15%] right-[3%] w-26 h-26 opacity-16 bg-indigo-600 rounded-full blur-3xl" />
+        
+        {/* Blue/Cyan family */}
+        <div className="absolute top-[35%] right-[20%] w-22 h-22 opacity-14 bg-cyan-500 rounded-full blur-2xl" />
+        <div className="absolute top-[70%] left-[20%] w-18 h-18 opacity-10 bg-sky-500 rounded-full blur-xl" />
+        <div className="absolute bottom-[30%] right-[25%] w-24 h-24 opacity-13 bg-blue-600 rounded-full blur-2xl" />
+        <div className="absolute top-[50%] left-[25%] w-16 h-16 opacity-11 bg-cyan-600 rounded-full blur-xl" />
+        
+        {/* Pink/Rose accents */}
+        <div className="absolute top-[25%] left-[40%] w-20 h-20 opacity-12 bg-pink-500 rounded-full blur-2xl" />
+        <div className="absolute bottom-[40%] left-[35%] w-14 h-14 opacity-9 bg-rose-500 rounded-full blur-xl" />
+        <div className="absolute top-[65%] right-[30%] w-18 h-18 opacity-11 bg-pink-600 rounded-full blur-xl" />
+        
+        {/* Subtle orange/amber accents */}
+        <div className="absolute bottom-[25%] left-[45%] w-16 h-16 opacity-8 bg-orange-500 rounded-full blur-xl" />
+        <div className="absolute top-[45%] right-[40%] w-12 h-12 opacity-7 bg-amber-500 rounded-full blur-lg" />
+        
+        {/* Additional depth bubbles */}
+        <div className="absolute top-[80%] left-[10%] w-22 h-22 opacity-10 bg-violet-600 rounded-full blur-2xl" />
+        <div className="absolute top-[15%] right-[35%] w-14 h-14 opacity-8 bg-indigo-700 rounded-full blur-xl" />
+        <div className="absolute bottom-[10%] right-[15%] w-20 h-20 opacity-12 bg-purple-600 rounded-full blur-2xl" />
+        <div className="absolute top-[55%] left-[45%] w-10 h-10 opacity-6 bg-blue-700 rounded-full blur-lg" />
+      </div>
   )
 }
 
 function BlurVeil() {
-  return <div className="fixed inset-0 -z-10 bg-white/60 dark:bg-black/40 pointer-events-none" />
+  return <div className="fixed inset-0 -z-5 bg-white/80 dark:bg-black/60 pointer-events-none" />
 }
 
 function CommandPalette({
@@ -296,24 +402,152 @@ const getInitials = (name: string) => {
     .toUpperCase()
 }
 
+function ProjectDetailModal({
+  project,
+  isOpen,
+  onClose,
+}: {
+  project: typeof PROJECTS[0] | null
+  isOpen: boolean
+  onClose: () => void
+}) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = "hidden"
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = "unset"
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen || !project) return null
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl"
+      >
+        {/* Header */}
+        <div className="sticky top-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800 p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
+                {project.title}
+              </h1>
+              <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-4">
+                {project.description}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              className="rounded-xl border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-950/50"
+            >
+              ✕
+            </Button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Project Image/Demo */}
+          <div className="mb-8">
+            <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <ExternalLink className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                </div>
+                <p className="text-zinc-600 dark:text-zinc-400">Project Demo/Screenshot</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Project Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Project Overview</h3>
+              <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                This is a detailed description of the {project.title} project. Here you can provide more context about the project, the problems it solves, the technologies used, and the impact it has made.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Key Features</h3>
+              <ul className="space-y-2 text-zinc-700 dark:text-zinc-300">
+                <li>• Feature 1: Advanced functionality</li>
+                <li>• Feature 2: User-friendly interface</li>
+                <li>• Feature 3: Scalable architecture</li>
+                <li>• Feature 4: Real-time updates</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Technical Details */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4">Technical Implementation</h3>
+            <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-4 border border-zinc-200 dark:border-zinc-800">
+              <p className="text-zinc-700 dark:text-zinc-300">
+                Detailed technical information about how this project was built, the architecture decisions, challenges faced, and solutions implemented.
+              </p>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            {project.github && (
+              <Button asChild className="rounded-xl">
+                <a href={project.github} target="_blank" rel="noopener noreferrer">
+                  <Github className="w-4 h-4 mr-2" />
+                  View Code
+                </a>
+              </Button>
+            )}
+            {project.demo && (
+              <Button variant="outline" asChild className="rounded-xl bg-transparent">
+                <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Live Demo
+                </a>
+              </Button>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 export default function Portfolio() {
-  const [theme, setTheme] = useState<"light" | "dark">("light")
+  const { theme, setTheme } = useTheme()
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [activeProjectTag, setActiveProjectTag] = useState("All")
-
-  useEffect(() => {
-    const stored = localStorage.getItem("theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const initialTheme = (stored as "light" | "dark") || (prefersDark ? "dark" : "light")
-    setTheme(initialTheme)
-    document.documentElement.classList.toggle("dark", initialTheme === "dark")
-  }, [])
+  const [selectedProject, setSelectedProject] = useState<typeof PROJECTS[0] | null>(null)
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light"
-    setTheme(newTheme)
-    localStorage.setItem("theme", newTheme)
-    document.documentElement.classList.toggle("dark", newTheme === "dark")
+    setTheme(theme === "light" ? "dark" : "light")
   }
 
   useEffect(() => {
@@ -402,6 +636,76 @@ export default function Portfolio() {
       keywords: [exp.role.toLowerCase(), exp.company.toLowerCase()],
       action: () => scrollToSection("experience"),
     })),
+    
+    // Easter Eggs 🥚
+    {
+      id: "konami",
+      type: "command",
+      title: "🎮 Konami Code Activated!",
+      description: "Up Up Down Down Left Right Left Right B A",
+      keywords: ["konami", "code", "cheat", "game", "secret", "up", "down", "left", "right"],
+      action: () => {
+        document.body.style.transform = "rotate(360deg)"
+        document.body.style.transition = "transform 2s ease-in-out"
+        setTimeout(() => {
+          document.body.style.transform = ""
+          document.body.style.transition = ""
+        }, 2000)
+        alert("🎉 You found the Konami code! The page did a barrel roll!")
+      },
+    },
+    {
+      id: "coffee",
+      type: "command",
+      title: "☕ Need Coffee?",
+      description: "Every developer's fuel",
+      keywords: ["coffee", "caffeine", "java", "brew", "espresso", "latte"],
+      action: () => {
+        const coffeeEmojis = ["☕", "🍵", "🥤", "🧋"]
+        const randomCoffee = coffeeEmojis[Math.floor(Math.random() * coffeeEmojis.length)]
+        alert(`${randomCoffee} Here's your virtual coffee! Time to code!`)
+      },
+    },
+    {
+      id: "matrix",
+      type: "command", 
+      title: "🕶️ Enter the Matrix",
+      description: "Follow the white rabbit...",
+      keywords: ["matrix", "neo", "red", "blue", "pill", "rabbit", "morpheus"],
+      action: () => {
+        const originalBg = document.body.style.background
+        document.body.style.background = "linear-gradient(to bottom, #0f0f0f 0%, #003300 100%)"
+        document.body.style.color = "#00ff00"
+        document.body.style.fontFamily = "monospace"
+        setTimeout(() => {
+          document.body.style.background = originalBg
+          document.body.style.color = ""
+          document.body.style.fontFamily = ""
+        }, 3000)
+        alert("🔴🔵 You took the red pill! Welcome to the Matrix...")
+      },
+    },
+    {
+      id: "rickroll",
+      type: "command",
+      title: "🎵 Never Gonna Give You Up",
+      description: "You know the rules, and so do I",
+      keywords: ["rick", "roll", "rickroll", "never", "gonna", "give", "you", "up", "astley"],
+      action: () => {
+        window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")
+        alert("🎤 You just got Rick Roll'd! 🕺")
+      },
+    },
+    {
+      id: "developer",
+      type: "command",
+      title: "👨‍💻 About the Developer",
+      description: "Secret developer info",
+      keywords: ["developer", "ayush", "secret", "about", "hidden", "info"],
+      action: () => {
+        alert(`🚀 Secret Developer Stats:\n\n☕ Coffee consumed: ∞\n🐛 Bugs created: 42\n🔧 Bugs fixed: 41\n🌙 Late nights coding: Too many to count\n🎯 Favorite language: "It depends..."\n\n💡 Fun fact: This easter egg was added at 2 AM!`)
+      },
+    },
   ]
 
   return (
@@ -428,16 +732,16 @@ export default function Portfolio() {
                 Projects
               </button>
               <button
-                onClick={() => scrollToSection("creative")}
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-              >
-                Creative
-              </button>
-              <button
                 onClick={() => scrollToSection("experience")}
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
               >
                 Experience
+              </button>
+              <button
+                onClick={() => scrollToSection("creative")}
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                Creative
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
@@ -484,8 +788,8 @@ export default function Portfolio() {
 
       {/* About Section */}
       <Section id="about" title="About">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="prose prose-zinc dark:prose-invert max-w-none">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+          <div className="prose prose-zinc dark:prose-invert max-w-none lg:col-span-2">
             <h2 className="text-2xl font-bold mb-4">{YOU.name}</h2>
             <p className="text-lg leading-relaxed">{YOU.bio}</p>
           </div>
@@ -508,7 +812,8 @@ export default function Portfolio() {
           {filteredProjects.map((project, index) => (
             <Card
               key={index}
-              className="border-zinc-200 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-950/20"
+              className="border-zinc-200 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-950/20 cursor-pointer"
+              onClick={() => setSelectedProject(project)}
             >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
@@ -520,6 +825,7 @@ export default function Portfolio() {
                         size="sm"
                         asChild
                         className="border-blue-200 hover:border-blue-400 hover:bg-blue-50 dark:border-blue-800 dark:hover:border-blue-600 dark:hover:bg-blue-950/50 bg-transparent"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <a href={project.github} target="_blank" rel="noopener noreferrer">
                           <Github className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -532,6 +838,7 @@ export default function Portfolio() {
                         size="sm"
                         asChild
                         className="border-blue-200 hover:border-blue-400 hover:bg-blue-50 dark:border-blue-800 dark:hover:border-blue-600 dark:hover:bg-blue-950/50 bg-transparent"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <a href={project.demo} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -541,7 +848,7 @@ export default function Portfolio() {
                   </div>
                 </div>
                 <p className="text-zinc-600 dark:text-zinc-400 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {project.tags.map((tag) => (
                     <Badge
                       key={tag}
@@ -552,8 +859,80 @@ export default function Portfolio() {
                     </Badge>
                   ))}
                 </div>
+                <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                  Click to view details →
+                </div>
               </CardContent>
             </Card>
+          ))}
+        </div>
+      </Section>
+
+      {/* Experience Section */}
+      <Section id="experience" title="Experience">
+        <div className="space-y-8">
+          {EXPERIENCE.map((exp, index) => (
+            <div key={index} className="flex">
+              <div className="flex flex-col items-center mr-6">
+                <div className="w-3 h-3 bg-zinc-400 dark:bg-zinc-600 rounded-full"></div>
+                {index < EXPERIENCE.length - 1 && <div className="w-px h-16 bg-zinc-200 dark:bg-zinc-800 mt-2"></div>}
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold">{exp.role}</h3>
+                <div className="flex items-center space-x-2 text-zinc-600 dark:text-zinc-400 mb-3">
+                  <span>{exp.company}</span>
+                  <span>•</span>
+                  <span>{exp.period}</span>
+                </div>
+                <ul className="space-y-1 mb-4">
+                  {exp.bullets.map((bullet, i) => (
+                    <li key={i} className="text-zinc-700 dark:text-zinc-300">
+                      • {bullet}
+                    </li>
+                  ))}
+                </ul>
+                
+                {/* Photos and Links */}
+                <div className="flex flex-wrap gap-3">
+                  {exp.photos && exp.photos.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Camera className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <div className="flex gap-2">
+                        {exp.photos.map((photo, i) => (
+                          <img
+                            key={i}
+                            src={photo}
+                            alt={`${exp.role} photo ${i + 1}`}
+                            className="w-12 h-12 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700 hover:scale-105 transition-transform cursor-pointer"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {exp.links && exp.links.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Link2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <div className="flex gap-2">
+                        {exp.links.map((link, i) => (
+                          <Button
+                            key={i}
+                            variant="outline"
+                            size="sm"
+                            asChild
+                            className="h-8 px-3 text-xs border-blue-200 hover:border-blue-400 hover:bg-blue-50 dark:border-blue-800 dark:hover:border-blue-600 dark:hover:bg-blue-950/50 bg-transparent"
+                          >
+                            <a href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.title}
+                            </a>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </Section>
@@ -600,35 +979,6 @@ export default function Portfolio() {
                   </div>
                 </div>
               )}
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* Experience Section */}
-      <Section id="experience" title="Experience">
-        <div className="space-y-8">
-          {EXPERIENCE.map((exp, index) => (
-            <div key={index} className="flex">
-              <div className="flex flex-col items-center mr-6">
-                <div className="w-3 h-3 bg-zinc-400 dark:bg-zinc-600 rounded-full"></div>
-                {index < EXPERIENCE.length - 1 && <div className="w-px h-16 bg-zinc-200 dark:bg-zinc-800 mt-2"></div>}
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold">{exp.role}</h3>
-                <div className="flex items-center space-x-2 text-zinc-600 dark:text-zinc-400 mb-3">
-                  <span>{exp.company}</span>
-                  <span>•</span>
-                  <span>{exp.period}</span>
-                </div>
-                <ul className="space-y-1">
-                  {exp.bullets.map((bullet, i) => (
-                    <li key={i} className="text-zinc-700 dark:text-zinc-300">
-                      • {bullet}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           ))}
         </div>
@@ -738,6 +1088,16 @@ export default function Portfolio() {
             onToggleTheme={toggleTheme}
             items={searchItems}
             onProjectFilter={setActiveProjectTag}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectDetailModal
+            project={selectedProject}
+            isOpen={!!selectedProject}
+            onClose={() => setSelectedProject(null)}
           />
         )}
       </AnimatePresence>

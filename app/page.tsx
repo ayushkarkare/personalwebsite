@@ -37,6 +37,46 @@ type Media =
   | { type: "video"; id: string; title?: string; tags?: string[] }
   | { type: "photo"; src: string; title?: string; tags?: string[] }
 
+type ProjectVideo = {
+  title: string
+  youtubeId: string
+}
+
+type ProjectPDF = {
+  title: string
+  url: string
+}
+
+type ProjectMedia = {
+  images?: string[]
+  videos?: ProjectVideo[]
+  pdfs?: ProjectPDF[]
+}
+
+type WorkStatus = {
+  title: string
+  currentPhase: string
+  progress: number
+  updates: string[]
+  nextMilestones: string[]
+}
+
+type Project = {
+  title: string
+  year: number
+  description: string
+  tags: string[]
+  link?: string | string[]
+  github?: string
+  demo?: string
+  overview?: string
+  features?: string[]
+  technical?: string
+  media?: ProjectMedia
+  inProgress?: boolean
+  workStatus?: WorkStatus
+}
+
 const CREATIVE_MEDIA: Media[] = [
   { type: "video", id: "dQw4w9WgXcQ", title: "Sample Video", tags: ["travel"] },
   { type: "photo", src: "/majestic-mountain-vista.png", title: "Mountains", tags: ["outdoors"] },
@@ -46,21 +86,25 @@ const CREATIVE_MEDIA: Media[] = [
   { type: "photo", src: "/placeholder-bhxyx.png", title: "Architecture", tags: ["urban"] },
 ]
 
-const PROJECTS = [
+const PROJECTS: Project[] = [
   {title: "BrewTrack",
     year: 2025,
     description: "A smart café management tool that tracks sales and inventory in real time, forecasts needs, and provides actionable insights through a conversational AI assistant.",
     tags: ["Python", "AI/LLM", "Software"],
-    link: "#",
     github: "https://github.com/ayushkarkare/brewtrack/",
     demo: "https://youtu.be/vvRNs-Nehe4",
-    overview: "Brewtrack is a business analytics platform designed to help independent coffee shops make smarter, data-driven decisions without needing a background in analytics. It was created to solve a common problem many café owners face: limited time and resources to track inventory, forecast demand, and analyze sales trends effectively. By connecting to point-of-sale systems and using recipes and modifiers, Brewtrack translates raw sales data into clear insights about top-performing items, ingredient usage, and future needs. The goal is to give shop owners a simple conversational tool that feels like talking to an assistant, so they can focus on running their business while still benefiting from the kind of predictive analytics that larger chains rely on.",
+    overview: "Brewtrack is a business analytics platform designed to help independent coffee shops make data-driven decisions without needing analytics expertise. It solves the common problem of limited time and resources to track inventory, forecast demand, and analyze sales trends. By connecting to point-of-sale systems, Brewtrack translates raw sales data into clear insights about top-performing items, ingredient usage, and future needs. The platform provides shop owners with a conversational AI tool, allowing them to focus on running their business while benefiting from predictive analytics.",
     features: [
-      "Importing in Square POS Data from Excel Sheet",
-      "AI chatbot using NLP to answer questions about sales and inventory", 
-      "Interactive dashboard with actionable insights provided that are backed by data",
+      "Square POS data integration from Excel sheets for seamless setup",
+      "AI chatbot using NLP to answer sales and inventory questions",
+      "Interactive dashboard with data-backed actionable insights",
+      "Facebook Prophet time series forecasting for demand prediction",
+      "Flask backend API for efficient data management",
+      "React frontend with intuitive user interface",
+      "Automated sales trend analysis and reporting",
+      "Real-time inventory tracking and alerts"
     ],
-    technical: "Brewtrack’s backend is built in Python with Flask for API management, while the frontend is developed in React for the user interface. Data analysis is handled with Pandas to process sales and inventory information, and Facebook Prophet is used for time series forecasting to predict future demand.",
+    technical: "Brewtrack's backend is built in Python with Flask for API management and data processing. The frontend uses React for an intuitive user interface with interactive dashboards. Data analysis is handled with Pandas to process sales and inventory information from Square POS systems. Facebook Prophet provides time series forecasting to predict future demand patterns. The AI chatbot uses natural language processing to provide conversational insights about sales trends, inventory levels, and business performance. The system architecture allows for real-time data processing and automated report generation.",
     media: {
       images: [],
       videos: [
@@ -73,7 +117,6 @@ const PROJECTS = [
     year: 2025,
     description: "Designing and building a fixed wing Red Bull Flugtag glider inspired by the movie Fight Club, engineered for glide distance in a flight competition.",
     tags: ["Aero", "CAD", "Hardware"],
-    demo: "https://www.redbull.com/us-en/events/red-bull-flugtag-dfw-usa-2025",
     link: "https://www.redbull.com/us-en/events/red-bull-flugtag-dfw-usa-2025",
     inProgress: true,
     workStatus: {
@@ -172,9 +215,27 @@ const PROJECTS = [
   {title: "Thermodynamics Property Calculator",
     year: 2024,
     description: "Developed a Thermodynamic Properties Calculator in MATLAB and as a React–Flask web app, enabling precise property lookups and interpolation with intuitive, user-friendly interfaces.",
-    tags: ["Python", "MATLAB", "Software"],
-    link: "#",
-    github: "https://github.com/yourhandle/weatherstation",
+    tags: ["Python", "MATLAB", "React", "Flask", "Software"],
+    github: "https://github.com/ayushkarkare/thermo_calculator",
+    overview: "I developed the Thermodynamic Properties Calculator as both a MATLAB desktop application and a web app using React and Flask, combining my skills in scientific computing and web development to handle complex thermodynamic tabulations. This dual approach showcases my versatility in scientific and web platforms, making complex calculations accessible through easy-to-use applications while maintaining consistent functionality for a broad range of users.",
+    features: [
+      "Intuitive MATLAB App Designer interface for desktop calculations",
+      "Property calculations for water, refrigerants, and ideal gases",
+      "Advanced interpolation algorithms for property lookups",
+      "Responsive React frontend with modern UI/UX design",
+      "Flask backend with Pandas for efficient data processing",
+      "Robust error handling and validation systems",
+      "Modular design with separate functions for each calculation type",
+      "High-precision calculations with reliable results"
+    ],
+    technical: "In the MATLAB version, I used MATLAB App Designer to create an intuitive interface, allowing users to calculate properties for substances like water, refrigerants, and ideal gases. I implemented interpolation for property lookups, managed various thermodynamic states, and ensured high-precision calculations. The program's design is modular, with separate functions for each calculation type and robust error handling for reliability. For the web version, I used React for the frontend and Flask with Pandas for the backend to bring the tool online. The frontend follows responsive design principles for a user-friendly experience, while the backend uses Pandas for fast data processing and calculations. This architecture allows for quick property lookups and efficient interpolation. Both versions demonstrate my expertise in software design and UI development.",
+    media: {
+      images: ["/thermo1.png", "/thermo2.png", "/thermo3.png", "/thermo4.png", "/thermo5.jpeg", "/thermo6.jpeg"],
+      videos: [
+        { title: "Thermodynamic Properties Calculator Demo", youtubeId: "7WOmO2sJrZM?si=eRfQLeeRXIRYtAKK" }
+      ],
+      pdfs: []
+    }
   },
   {title: "Mei Cha/The Lemon Scholars",
     year: 2024,
@@ -190,7 +251,7 @@ const PROJECTS = [
       "Co-founded Lemon Scholars lemonade business for college fundraising",
       "Generated over $50,000 in combined revenue across both ventures"
     ],
-    technical: "As CEO, I developed and executed comprehensive business strategies including project timeline management, marketing initiatives, and customer service protocols. The business model focused on targeting young adults aged 13-26 through strategic social media marketing and guerilla campaigns. The evolution from Mei Cha to Lemon Scholars demonstrated adaptability and scalability, transitioning from bubble tea at community events to lemonade sales at large fairs. This entrepreneurial journey provided extensive experience in strategic planning, financial projections, team management, and business development while maintaining agile operations to adapt to changing market trends.",
+    technical: "As CEO, I developed comprehensive business strategies including timeline management, marketing initiatives, and customer service protocols. The business model targeted young adults aged 13-26 through social media marketing and guerilla campaigns. The evolution from Mei Cha to Lemon Scholars demonstrated adaptability, transitioning from bubble tea at community events to lemonade sales at large fairs. This provided experience in strategic planning, financial projections, team management, and business development while maintaining agile operations.",
     media: {
       images: ["/mcbt1.jpg", "/mcbt2.jpg", "/mcbt3.jpg", "/mcbt4.jpg", "/mcbt5.jpg", "/mcbt6.jpg"],
       videos: [],
@@ -199,24 +260,82 @@ const PROJECTS = [
   },
   {title: "Trippian",
     year: 2025,
-    description: "Built and scaled two beverage ventures to a brick-and-mortar location, generating $50,000+ through strategic marketing and operations.",
-    tags: ["Hackathon/Competition"],
+    description: "An AI-powered travel companion that uses autonomous agents to plan, monitor, and automate your entire journey, from booking flights and tracking delays to scheduling Ubers and suggesting food and lodging.",
+    tags: ["AI/LLM", "Python", "React", "Flask", "Hackathon/Competition", "Software"],
     link: ["https://devpost.com/software/trippian", "https://www.youtube.com/watch?v=a6xSKq2aFh4"],
-    github: "https://github.com/yourhandle/weatherstation",
+    github: "https://github.com/LeoSesuraj/catapult",
+    overview: "Planning a trip should be exciting, not overwhelming. But between booking flights, finding hotels, scheduling Ubers, managing food stops, and handling delays, the details can quickly become a burden. That's why we created Trippian, your personal AI travel assistant. It anticipates and automates every step of your journey so you can stop stressing over logistics and start enjoying the experience. Trippian communicates with you conversationally and acts on your behalf in real time.",
+    features: [
+      "Multi-agent AI system with Calendar, Flights, Hotels, and Travel Assistant agents",
+      "Autonomous agents that collaborate intelligently with shared memory",
+      "Google Calendar integration for availability checks",
+      "Amadeus API integration for flight and hotel searches",
+      "OpenAI API for natural language understanding and agent automation",
+      "Real-time flight delay monitoring and automatic rebooking",
+      "Conversational interface for seamless trip planning",
+      "Clean, intuitive React Native frontend with TypeScript"
+    ],
+    technical: "Trippian is an intelligent travel-planning app powered by a Python backend (Flask) and a React Native frontend (Expo, TypeScript). It uses a multi-agent AI system with Calendar, Flights, Hotels, and Travel Assistant agents that work together via structured handoffs and a shared ItineraryState. We integrated Google Calendar for availability checks, Amadeus API for flight & hotel searches, and OpenAI API for natural language understanding and agent automation. Other technologies include Passlib and Google OAuth for authentication, AsyncStorage, React Navigation, and Moti for mobile UX. The biggest challenge was building truly autonomous AI agents that could collaborate intelligently, not just chained workflows disguised as agents. Each agent has memory, reasons within its domain, and operates independently while maintaining a shared state.",
+    media: {
+      images: ["/trippian1.jpg", "/trippian2.jpg", "/trippian3.jpg"],
+      videos: [
+        { title: "Trippian - AI Travel Assistant Demo", youtubeId: "a6xSKq2aFh4?si=38UrTGS-1XcsFy4V" }
+      ],
+      pdfs: []
+    }
   },
   {title: "LocalLens",
     year: 2024,
-    description: "Built and scaled two beverage ventures to a brick-and-mortar location, generating $50,000+ through strategic marketing and operations.",
-    tags: ["Hackathon/Competition"],
-    link: ["https://devpost.com/software/trippian", "https://www.youtube.com/watch?v=a6xSKq2aFh4"],
-    github: "https://github.com/yourhandle/weatherstation",
+    description: "Hands-free campus tours with Meta Glasses. Real-time, location-based audio guides trigger automatically as you explore, delivering the right info at the right place.",
+    tags: ["React", "Selenium", "Meta Glasses", "Hackathon/Competition", "AI/LLM", "Software"],
+    link: ["https://devpost.com/software/locallens-b3xhu5", "https://www.youtube.com/watch?v=FITI1bCMvkQ"],
+    github: "https://github.com/joeykokinda/MLH",
+    overview: "Traditional campus tours often rely on you needing to schedule beforehand and other alternatives like virtual phone tours are annoying. So we wanted to create a hands-free experience that allows users to explore freely while still receiving location-based insights. With Meta Glasses, we saw an opportunity to leverage cutting-edge wearable technology to deliver real-time, geofenced audio narration, ensuring that users stay fully immersed in their surroundings while effortlessly accessing relevant information with no screens, no interruptions, just a natural, guided exploration.",
+    features: [
+      "Hands-free campus tour experience using Meta Glasses",
+      "Real-time location tracking with geofencing technology",
+      "Automatic audio narration triggered by location",
+      "Instagram Live integration for audio delivery",
+      "Express.js server for location processing",
+      "Selenium automation for livestream interaction",
+      "React Native mobile app with Expo Router",
+      "Text-to-speech integration via Meta's built-in features"
+    ],
+    technical: "Built with React Native and Expo, using Expo Router for navigation and the Expo Location API for geofencing. We utilize Selenium to automate Instagram livestream interactions for audio delivery. The system works by initiating a livestream on Meta Glasses while sending positional data from the phone to an Express.js server. When users enter predefined geofenced points, the server retrieves location facts and posts them as livestream comments. Meta's text-to-speech feature reads comments aloud for hands-free audio tours. Due to Meta Glasses' closed-source nature, we reverse-engineered a creative solution using the livestream feature to deliver location-based audio information.",
+    media: {
+      images: ["/locallens1.jpg", "/locallens2.jpg"],
+      videos: [
+        { title: "LocalLens - Meta Glasses Campus Tour Demo", youtubeId: "FITI1bCMvkQ?si=8KFv8s8X1-fVYJAE" }
+      ],
+      pdfs: []
+    }
   },
   {title: "Pyras",
     year: 2024,
-    description: "Built and scaled two beverage ventures to a brick-and-mortar location, generating $50,000+ through strategic marketing and operations.",
-    tags: ["Hackathon/Competition"],
-    link: ["https://devpost.com/software/trippian", "https://www.youtube.com/watch?v=a6xSKq2aFh4"],
-    github: "https://github.com/yourhandle/weatherstation",
+    description: "A distributed GPU rental marketplace connecting idle GPU owners with developers, researchers, and creators who need affordable high-performance computing power. Think Airbnb for GPUs.",
+    tags: ["Business/Startup"],
+    link: "https://www.youtube.com/watch?v=45Xyndj4ppQ",
+    overview: "After the cryptocurrency mining boom, an estimated 10 million GPUs are sitting idle, representing a significant underutilized resource. Meanwhile, industries such as AI, 3D modeling, and multimedia production are experiencing a 30% annual growth in demand for high-performance GPU power. Current enterprise solutions, such as AWS and Google Cloud, charge upwards of $3 per GPU hour, making them prohibitively expensive and complex for hobbyists, independent researchers, and small-scale developers. Pyras bridges this gap by connecting people who own idle GPUs with those who need high-performance computing power, like developers, researchers, and creators. Our platform handles everything from matching renters with the right GPUs to securing transactions, using a dynamic pricing algorithm that ensures fair rates for both parties.",
+    features: [
+      "Distributed GPU rental marketplace platform",
+      "Dynamic pricing algorithm ensuring fair rates for hosts and renters",
+      "User-friendly interface requiring no cloud computing expertise",
+      "Secure transaction processing and workload isolation",
+      "Automatic GPU management and flexible setup",
+      "Cost savings up to 70% compared to traditional cloud providers",
+      "Support for AI training, 3D modeling, and multimedia production",
+      "Seamless onboarding for both hosts and renters"
+    ],
+    technical: "Pyras operates as a distributed marketplace where GPU owners list hardware and earn passive income by renting to users needing compute power for AI training, 3D rendering, or video production. The platform features a dynamic pricing algorithm factoring in GPU specifications, market demand, and supply for competitive rates. The system includes encrypted connections, secure workload isolation, and easy VM/container deployment. Unlike competitors targeting tech-savvy users, Pyras is designed for hobbyists, indie developers, and small businesses. The revenue model takes a 20% platform fee from transactions, allowing hosts to earn fair income while renters save significantly compared to traditional cloud providers.",
+    media: {
+      images: [],
+      videos: [
+        { title: "Pyras - GPU Rental Marketplace Pitch", youtubeId: "45Xyndj4ppQ?si=gJQK8CvuIwLGWcuP" }
+      ],
+      pdfs: [
+        { title: "Pyras Business Plan & Technical Overview", url: "/pyras.pdf" }
+      ]
+    }
   },
   
 ]
@@ -811,10 +930,25 @@ function ProjectDetailModal({
                 <a href={project.link} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="w-4 h-4 mr-2" />
                   {project.link.includes('newsroom') || project.link.includes('news') ? 'News Article' : 
-                   project.link.includes('robotevents.com') ? 'Awards & Accomplishments' : 'Event Page'}
+                   project.link.includes('robotevents.com') ? 'Awards & Accomplishments' :
+                   project.link.includes('redbull.com') ? 'Event Page' :
+                   (project.link.includes('youtube.com') || project.link.includes('youtu.be')) && project.title === 'Pyras' ? 'Concept Overview' : 'Demo Video'}
                 </a>
               </Button>
             )}
+            {project.link && Array.isArray(project.link) && project.link.map((link, index) => (
+              <Button key={index} variant="outline" asChild className="rounded-xl bg-transparent">
+                <a href={link} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {link.includes('devpost.com') ? 'Devpost' :
+                   (link.includes('youtube.com') || link.includes('youtu.be')) && project.title === 'Pyras' ? 'Concept Overview' :
+                   link.includes('youtube.com') || link.includes('youtu.be') ? 'Demo Video' :
+                   link.includes('newsroom') || link.includes('news') ? 'News Article' : 
+                   link.includes('robotevents.com') ? 'Awards & Accomplishments' :
+                   link.includes('redbull.com') ? 'Event Page' : 'Demo Video'}
+                </a>
+              </Button>
+            ))}
             {project.demo && (
               <Button variant="outline" asChild className="rounded-xl bg-transparent">
                 <a href={project.demo} target="_blank" rel="noopener noreferrer">

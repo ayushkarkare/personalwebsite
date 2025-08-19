@@ -36,7 +36,7 @@ html {
         `}</style>
       </head>
       <body className="antialiased">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
         </ThemeProvider>
       </body>

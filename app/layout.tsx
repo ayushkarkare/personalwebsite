@@ -6,9 +6,14 @@ import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Ayush Karkare - Personal Website",
+  title: "Ayush Karkare",
   description: "Aerospace student, builder, and cinematography enjoyer",
   generator: "v0.dev",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 }
 
 export default function RootLayout({
@@ -19,6 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <style>{`
 html {
   font-family: ${GeistSans.style.fontFamily};

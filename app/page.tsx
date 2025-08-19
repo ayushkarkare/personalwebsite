@@ -34,8 +34,8 @@ const YOU = {
 }
 
 type Media =
-  | { type: "video"; id: string; title?: string; tags?: string[] }
-  | { type: "photo"; src: string; title?: string; tags?: string[] }
+  | { type: "video"; id: string; title?: string; tags?: string[]; location?: { name: string; lat: number; lng: number } }
+  | { type: "photo"; src: string; title?: string; tags?: string[]; location?: { name: string; lat: number; lng: number } }
 
 type ProjectVideo = {
   title: string
@@ -78,12 +78,18 @@ type Project = {
 }
 
 const CREATIVE_MEDIA: Media[] = [
-  { type: "video", id: "dQw4w9WgXcQ", title: "Sample Video", tags: ["travel"] },
-  { type: "photo", src: "/majestic-mountain-vista.png", title: "Mountains", tags: ["outdoors"] },
-  { type: "photo", src: "/sunset-cityscape.png", title: "City Lights", tags: ["urban"] },
-  { type: "video", id: "jNQXAC9IVRw", title: "Another Video", tags: ["tech"] },
-  { type: "photo", src: "/forest-path.png", title: "Forest Path", tags: ["nature", "outdoors"] },
-  { type: "photo", src: "/placeholder-bhxyx.png", title: "Architecture", tags: ["urban"] },
+  { type: "photo", src: "/_DSF1983.jpg", title: "Bar Harbor Sunrise", location: { name: "Bar Harbor, Maine", lat: 44.390765, lng: -68.202400 } },
+  { type: "photo", src: "/_DSF2315.jpg", title: "Acadia Stargazing", location: { name: "Acadia Blackwoods Campgrounds", lat: 44.313196, lng: -68.210768 } },
+  { type: "video", id: "vMyAxZ3obuk", title: "la matcha and food" },
+  { type: "photo", src: "/_DSF2608-2.jpg", title: "Griffith Observatory", location: { name: "Griffith Park Observatory", lat: 34.118391, lng: -118.299880 } },
+  { type: "photo", src: "/DSCF0976.jpg", title: "Allerton Hotel", location: { name: "Allerton Hotel Chicago", lat: 41.894935, lng: -87.622905 } },
+  { type: "photo", src: "/_DSF2654-3.jpg", title: "In-N-Out LAX", location: { name: "In and Out LAX", lat: 33.953612, lng: -118.396519 } },
+  { type: "video", id: "vlcLo1taBr0", title: "a week in new england." },
+  { type: "photo", src: "/DSCF1443-2.jpg", title: "Longwood Gardens Detail", location: { name: "Longwood Gardens", lat: 39.871240, lng: -75.679095 } },
+  { type: "photo", src: "/DSCF0942.jpg", title: "Nordstrom Chicago", location: { name: "Nordstrom Chicago", lat: 41.891741, lng: -87.624873 } },
+  { type: "photo", src: "/DSCF1007.jpg", title: "Michigan Avenue", location: { name: "Michigan Ave Chicago", lat: 41.895153, lng: -87.624280 } },
+  { type: "video", id: "-ER8IwgLsdE", title: "akari coffee: saturday cafe vol. 3" },
+  { type: "photo", src: "/DSCF1459.jpg", title: "Longwood Gardens", location: { name: "Longwood Gardens", lat: 39.870067, lng: -75.677198 } }
 ]
 
 const PROJECTS: Project[] = [
@@ -970,7 +976,11 @@ export default function Portfolio() {
   const [activeProjectTag, setActiveProjectTag] = useState("All")
   const [selectedProject, setSelectedProject] = useState<typeof PROJECTS[0] | null>(null)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [selectedCreativeMedia, setSelectedCreativeMedia] = useState<{ media: typeof CREATIVE_MEDIA[0], index: number } | null>(null)
+  const [hoveredLocation, setHoveredLocation] = useState<{ location: { name: string; lat: number; lng: number }, x: number, y: number } | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [konamiSequence, setKonamiSequence] = useState<string[]>([])
+  const [matrixMode, setMatrixMode] = useState(false)
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light")
@@ -991,6 +1001,142 @@ export default function Portfolio() {
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [])
+
+  // Keyboard navigation for creative lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedCreativeMedia) return
+      
+      if (e.key === "Escape") {
+        setSelectedCreativeMedia(null)
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault()
+        const prevIndex = selectedCreativeMedia.index === 0 ? CREATIVE_MEDIA.length - 1 : selectedCreativeMedia.index - 1
+        setSelectedCreativeMedia({ media: CREATIVE_MEDIA[prevIndex], index: prevIndex })
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault()
+        const nextIndex = selectedCreativeMedia.index === CREATIVE_MEDIA.length - 1 ? 0 : selectedCreativeMedia.index + 1
+        setSelectedCreativeMedia({ media: CREATIVE_MEDIA[nextIndex], index: nextIndex })
+      }
+    }
+
+    if (selectedCreativeMedia) {
+      document.addEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = "hidden"
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = "unset"
+    }
+  }, [selectedCreativeMedia])
+
+  // Enhanced Konami Code Detection
+  useEffect(() => {
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA']
+    
+    const handleKonamiKeyDown = (e: KeyboardEvent) => {
+      const newSequence = [...konamiSequence, e.code].slice(-10)
+      setKonamiSequence(newSequence)
+      
+      if (JSON.stringify(newSequence) === JSON.stringify(konamiCode)) {
+        // Konami code activated!
+        setMatrixMode(true)
+        document.body.style.background = "linear-gradient(135deg, #0f0f0f 0%, #001100 50%, #003300 100%)"
+        document.body.style.color = "#00ff00"
+        document.body.style.fontFamily = "monospace"
+        
+        // Create matrix rain effect
+        const canvas = document.createElement('canvas')
+        canvas.style.position = 'fixed'
+        canvas.style.top = '0'
+        canvas.style.left = '0'
+        canvas.style.width = '100vw'
+        canvas.style.height = '100vh'
+        canvas.style.pointerEvents = 'none'
+        canvas.style.zIndex = '9999'
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        document.body.appendChild(canvas)
+        
+        const ctx = canvas.getContext('2d')
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン'
+        const fontSize = 14
+        const columns = canvas.width / fontSize
+        const drops: number[] = []
+        
+        for (let i = 0; i < columns; i++) {
+          drops[i] = 1
+        }
+        
+        const draw = () => {
+          if (!ctx) return
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+          
+          ctx.fillStyle = '#00ff00'
+          ctx.font = `${fontSize}px monospace`
+          
+          for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)]
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize)
+            
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0
+            }
+            drops[i]++
+          }
+        }
+        
+        const matrixInterval = setInterval(draw, 33)
+        
+        setTimeout(() => {
+          setMatrixMode(false)
+          setKonamiSequence([])
+          document.body.style.background = ''
+          document.body.style.color = ''
+          document.body.style.fontFamily = ''
+          clearInterval(matrixInterval)
+          document.body.removeChild(canvas)
+          
+          // Show achievement notification
+          const notification = document.createElement('div')
+          notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00ff00, #008800);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 8px 32px rgba(0, 255, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+          `
+          notification.innerHTML = '🎮 Achievement Unlocked: Matrix Mode!'
+          
+          const style = document.createElement('style')
+          style.textContent = `
+            @keyframes slideIn {
+              from { transform: translateX(100%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+          `
+          document.head.appendChild(style)
+          document.body.appendChild(notification)
+          
+          setTimeout(() => {
+            document.body.removeChild(notification)
+            document.head.removeChild(style)
+          }, 4000)
+        }, 5000)
+      }
+    }
+    
+    document.addEventListener('keydown', handleKonamiKeyDown)
+    return () => document.removeEventListener('keydown', handleKonamiKeyDown)
+  }, [konamiSequence])
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
@@ -1071,48 +1217,11 @@ export default function Portfolio() {
     {
       id: "konami",
       type: "command",
-      title: "🎮 Konami Code Activated!",
-      description: "Up Up Down Down Left Right Left Right B A",
-      keywords: ["konami", "code", "cheat", "game", "secret", "up", "down", "left", "right"],
+      title: "🎮 Matrix Mode",
+      description: "↑↑↓↓←→←→BA - Enter the digital realm",
+      keywords: ["konami", "code", "cheat", "game", "secret", "up", "down", "left", "right", "matrix", "neo"],
       action: () => {
-        document.body.style.transform = "rotate(360deg)"
-        document.body.style.transition = "transform 2s ease-in-out"
-        setTimeout(() => {
-          document.body.style.transform = ""
-          document.body.style.transition = ""
-        }, 2000)
-        alert("🎉 You found the Konami code! The page did a barrel roll!")
-      },
-    },
-    {
-      id: "coffee",
-      type: "command",
-      title: "☕ Need Coffee?",
-      description: "Every developer's fuel",
-      keywords: ["coffee", "caffeine", "java", "brew", "espresso", "latte"],
-      action: () => {
-        const coffeeEmojis = ["☕", "🍵", "🥤", "🧋"]
-        const randomCoffee = coffeeEmojis[Math.floor(Math.random() * coffeeEmojis.length)]
-        alert(`${randomCoffee} Here's your virtual coffee! Time to code!`)
-      },
-    },
-    {
-      id: "matrix",
-      type: "command", 
-      title: "🕶️ Enter the Matrix",
-      description: "Follow the white rabbit...",
-      keywords: ["matrix", "neo", "red", "blue", "pill", "rabbit", "morpheus"],
-      action: () => {
-        const originalBg = document.body.style.background
-        document.body.style.background = "linear-gradient(to bottom, #0f0f0f 0%, #003300 100%)"
-        document.body.style.color = "#00ff00"
-        document.body.style.fontFamily = "monospace"
-        setTimeout(() => {
-          document.body.style.background = originalBg
-          document.body.style.color = ""
-          document.body.style.fontFamily = ""
-        }, 3000)
-        alert("🔴🔵 You took the red pill! Welcome to the Matrix...")
+        alert("🎮 Hint: Try the actual Konami code with your keyboard arrows! ↑↑↓↓←→←→BA")
       },
     },
     {
@@ -1124,16 +1233,6 @@ export default function Portfolio() {
       action: () => {
         window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")
         alert("🎤 You just got Rick Roll'd! 🕺")
-      },
-    },
-    {
-      id: "developer",
-      type: "command",
-      title: "👨‍💻 About the Developer",
-      description: "Secret developer info",
-      keywords: ["developer", "ayush", "secret", "about", "hidden", "info"],
-      action: () => {
-        alert(`🚀 Secret Developer Stats:\n\n☕ Coffee consumed: ∞\n🐛 Bugs created: 42\n🔧 Bugs fixed: 41\n🌙 Late nights coding: Too many to count\n🎯 Favorite language: "It depends..."\n\n💡 Fun fact: This easter egg was added at 2 AM!`)
       },
     },
   ]
@@ -1374,46 +1473,104 @@ export default function Portfolio() {
 
       {/* Creative Section */}
       <Section id="creative" title="Creative">
+        {/* Creative Description */}
+        <div className="mb-8">
+          <p className="text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed mb-6">
+            I love capturing moments through photography and videography. My passion lies in landscape photography, 
+            creating cinematic films when possible, and always trying to capture unique feelings or moments in time. 
+            Each shot tells a story, whether it's the golden hour light hitting a mountain peak or the quiet intimacy 
+            of everyday moments transformed into something extraordinary.
+          </p>
+          <div className="flex justify-center items-center gap-6 mb-8">
+            <a
+              href="https://www.instagram.com/ayushk.jpg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 hover:border-blue-400 hover:bg-blue-50 dark:border-blue-800 dark:hover:border-blue-600 dark:hover:bg-blue-950/50 bg-transparent transition-all duration-300 hover:scale-105"
+            >
+              <Camera className="w-4 h-4" />
+              Photography
+            </a>
+            <a
+              href="https://www.youtube.com/@ayushkarkare3049"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 hover:border-blue-400 hover:bg-blue-50 dark:border-blue-800 dark:hover:border-blue-600 dark:hover:bg-blue-950/50 bg-transparent transition-all duration-300 hover:scale-105"
+            >
+              <Play className="w-4 h-4" />
+              Cinematography
+            </a>
+          </div>
+        </div>
+
+        {/* Coming Soon Portfolio */}
+        <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800 mb-12">
+          <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-2">
+            🎨 Full Creative Portfolio Coming Soon
+          </h3>
+          <p className="text-blue-700 dark:text-blue-300">
+            I'm working on a dedicated creative portfolio website that will showcase my complete photography and videography work. 
+            Stay tuned for a more immersive experience featuring high-resolution galleries, behind-the-scenes content, and interactive storytelling.
+          </p>
+        </div>
+
+        {/* Featured Work */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold mb-6">Featured Work</h3>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {CREATIVE_MEDIA.map((item, index) => (
             <div
               key={index}
-              className="group relative rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300"
+              className="group relative rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-xl hover:shadow-blue-100 dark:hover:shadow-blue-950/20 cursor-pointer"
+              onClick={() => setSelectedCreativeMedia({ media: item, index })}
+              onMouseEnter={(e) => {
+                if (item.location) {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  setHoveredLocation({
+                    location: item.location,
+                    x: rect.left + rect.width / 2,
+                    y: rect.top
+                  })
+                }
+              }}
+              onMouseLeave={() => setHoveredLocation(null)}
             >
-              {item.type === "video" ? (
-                <iframe
-                  src={`https://www.youtube.com/embed/${item.id}`}
-                  title={item.title || "Video"}
-                  className="w-full aspect-video"
-                  allowFullScreen
-                />
-              ) : (
-                <img
-                  src={item.src || "/placeholder.svg"}
-                  alt={item.title || "Photo"}
-                  className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              )}
-              {item.title && (
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 w-full">
-                    <h3 className="font-medium text-white">{item.title}</h3>
-                    {item.tags && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {item.tags.map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="secondary"
-                            className="text-xs bg-white/20 text-white border-white/30"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+              <div className="relative w-full aspect-[4/3] bg-zinc-100 dark:bg-zinc-800 rounded-lg overflow-hidden">
+                {item.type === "video" ? (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${item.id}`}
+                    title={item.title || "Video"}
+                    className="w-full h-full object-cover"
+                    allowFullScreen
+                  />
+                ) : (
+                  <img
+                    src={item.src || "/placeholder.svg"}
+                    alt={item.title || "Photo"}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
+                {item.location && (
+                  <div className="absolute top-2 right-2">
+                    <Badge className="bg-green-500 text-white border-0">
+                      <MapPin className="w-3 h-3" />
+                    </Badge>
+                  </div>
+                )}
+              </div>
+              
+              {/* Enhanced Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end">
+                <div className="p-4 w-full">
+                  <h3 className="font-semibold text-white text-lg mb-2">{item.title}</h3>
+                  <div className="flex items-center gap-2 text-white/80 text-sm">
+                    <ExternalLink className="w-3 h-3" />
+                    <span>Click to view full size</span>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>
@@ -1489,7 +1646,10 @@ export default function Portfolio() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="text-zinc-600 dark:text-zinc-400 mb-4 md:mb-0">
-              © {new Date().getFullYear()} {YOU.name}
+              <div>© {new Date().getFullYear()} {YOU.name}</div>
+              <div className="text-xs mt-2 opacity-75">
+                🎮 Easter Eggs: Try the Konami Code (↑↑↓↓←→←→BA) or search "rick" in Cmd+K
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <a
@@ -1513,7 +1673,7 @@ export default function Portfolio() {
             </div>
           </div>
         </div>
-      </footer>
+      </footer> 
 
       <AnimatePresence>
         {paletteOpen && (
@@ -1559,6 +1719,138 @@ export default function Portfolio() {
           >
             ✕
           </button>
+        </div>
+      )}
+
+      {/* Creative Lightbox Modal */}
+      {selectedCreativeMedia && (
+        <div 
+          className="fixed inset-0 z-[99999] bg-black/95 flex items-center justify-center p-4"
+          onClick={() => setSelectedCreativeMedia(null)}
+        >
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedCreativeMedia(null)}
+              className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors z-20"
+            >
+              ✕
+            </button>
+
+            {/* Navigation Arrows - Outside content area */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                const prevIndex = selectedCreativeMedia.index === 0 ? CREATIVE_MEDIA.length - 1 : selectedCreativeMedia.index - 1
+                setSelectedCreativeMedia({ media: CREATIVE_MEDIA[prevIndex], index: prevIndex })
+              }}
+              className="absolute left-8 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors w-12 h-12 flex items-center justify-center z-20"
+            >
+              ←
+            </button>
+            
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                const nextIndex = selectedCreativeMedia.index === CREATIVE_MEDIA.length - 1 ? 0 : selectedCreativeMedia.index + 1
+                setSelectedCreativeMedia({ media: CREATIVE_MEDIA[nextIndex], index: nextIndex })
+              }}
+              className="absolute right-8 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors w-12 h-12 flex items-center justify-center z-20"
+            >
+              →
+            </button>
+
+            {/* Media Content */}
+            <div 
+              className="relative flex items-center justify-center w-full h-full px-8 py-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {selectedCreativeMedia.media.type === "video" ? (
+                <div className="relative w-full max-w-5xl">
+                  <div className="w-full aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${selectedCreativeMedia.media.id}?autoplay=1`}
+                      title={selectedCreativeMedia.media.title || "Video"}
+                      className="w-full h-full"
+                      allowFullScreen
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    />
+                  </div>
+                  
+                  {/* Media Info for Video */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {selectedCreativeMedia.media.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-white/80 text-sm">
+                      <span>{selectedCreativeMedia.index + 1} of {CREATIVE_MEDIA.length}</span>
+                      <span className="flex items-center gap-1">
+                        <Play className="w-4 h-4" />
+                        Video
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative w-full max-w-5xl">
+                  <motion.img
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    src={selectedCreativeMedia.media.src || "/placeholder.svg"}
+                    alt={selectedCreativeMedia.media.title || "Photo"}
+                    className="w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                  />
+                  
+                  {/* Media Info for Photo */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {selectedCreativeMedia.media.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-white/80 text-sm">
+                      <span>{selectedCreativeMedia.index + 1} of {CREATIVE_MEDIA.length}</span>
+                      <span className="flex items-center gap-1">
+                        <Camera className="w-4 h-4" />
+                        Photo
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Location Map Tooltip */}
+      {hoveredLocation && (
+        <div
+          className="fixed z-[99999] pointer-events-none"
+          style={{
+            left: hoveredLocation.x - 120,
+            top: hoveredLocation.y - 90,
+          }}
+        >
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 p-3 w-[240px]">
+            {/* Location Header */}
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-4 h-4 text-green-500" />
+              <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+                {hoveredLocation.location.name}
+              </h4>
+            </div>
+            
+            {/* Coordinates */}
+            <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-1">
+              <div>Latitude: {hoveredLocation.location.lat.toFixed(6)}</div>
+              <div>Longitude: {hoveredLocation.location.lng.toFixed(6)}</div>
+            </div>
+            
+            {/* Arrow pointing to image */}
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
+              <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-white dark:border-t-zinc-900"></div>
+            </div>
+          </div>
         </div>
       )}
     </div>
